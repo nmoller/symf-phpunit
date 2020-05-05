@@ -51,6 +51,8 @@ great:
 
 ```
 php bin/console server:run
+# using instead:
+bin/mydockerRoot.sh symfony serve
 ```
 
 Now check out the site at `http://localhost:8000`
