@@ -65,4 +65,9 @@ class Dinosaur
     {
         return $this->genus;
     }
+
+    public function isCarnivorous()
+    {
+        return $this->isCarnivour;
+    }
 }
