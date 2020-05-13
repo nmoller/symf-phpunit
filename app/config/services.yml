@@ -33,3 +33,9 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    custom_doctrine_orm_naming_strategy_underscore:
+        class: Doctrine\ORM\Mapping\UnderscoreNamingStrategy
+        arguments:
+            - 0
+            - true
