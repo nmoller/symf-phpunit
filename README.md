@@ -77,6 +77,11 @@ From now on you will be able to run local PHPUnit from your project directory by
 ## Integraion tests
 WIth phpunit8 correct tearDown method in class KernelTestCase by adding return type `void` and run as usual.
 
+To make deprecation warning dissapear:
+
+https://stackoverflow.com/questions/58975182/deprecation-doctrine-orm-mapping-underscorenamingstrategy-without-making-it-num
+
+
 ## Have Ideas, Feedback or an Issue?
 
 If you have suggestions or questions, please feel free to
