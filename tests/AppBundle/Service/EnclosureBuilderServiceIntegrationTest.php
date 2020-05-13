@@ -4,6 +4,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Dinosaur;
+use AppBundle\Entity\Enclosure;
 use AppBundle\Entity\Security;
 use AppBundle\Service\EnclosureBuilderService;
 use Doctrine\ORM\EntityManager;
@@ -11,9 +12,20 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class EnclosureBuilderServiceIntegrationTest extends KernelTestCase
 {
-    public function testItBuildsEnclosureWithDefaultSpecs()
+    protected function setUp(): void
     {
         self::bootKernel();
+
+        $this->truncateEntities([
+            Enclosure::class,
+            Security::class,
+            Dinosaur::class
+        ]);
+    }
+
+
+    public function testItBuildsEnclosureWithDefaultSpecs()
+    {
         /** @var EnclosureBuilderService $enclosureBuilderService */
         $enclosureBuilderService = self::$kernel->getContainer()
             ->get('test.' . EnclosureBuilderService::class);
@@ -21,9 +33,7 @@ class EnclosureBuilderServiceIntegrationTest extends KernelTestCase
         $enclosureBuilderService->buildEnclosure();
 
         /** @var EntityManager $em */
-        $em = self::$kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $em = $this->getEntityManager();
 
         $count = (int) $em->getRepository(Security::class)
             ->createQueryBuilder('s')
@@ -40,5 +50,41 @@ class EnclosureBuilderServiceIntegrationTest extends KernelTestCase
             ->getSingleScalarResult();
 
         $this->assertSame(3, $count);
+    }
+
+    // just copy this method! :)
+    private function truncateEntities(array $entities)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $databasePlatform = $connection->getDatabasePlatform();
+
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+        }
+
+        foreach ($entities as $entity) {
+            $query = $databasePlatform->getTruncateTableSQL(
+                $this->getEntityManager()->getClassMetadata($entity)->getTableName()
+            );
+
+            $connection->executeUpdate($query);
+        }
+
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+        }
+    }
+
+    /**
+     * @return EntityManager
+     */
+    private function getEntityManager()
+    {
+
+        return self::$kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+
     }
 }
