@@ -15,6 +15,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new AppBundle\AppBundle(),
         ];
 
@@ -30,6 +31,7 @@ class AppKernel extends Kernel
 
             if ('test' === $this->getEnvironment()) {
                 $bundles[] = new Liip\FunctionalTestBundle\LiipFunctionalTestBundle();
+                $bundles[] = new Liip\TestFixturesBundle\LiipTestFixturesBundle();
             }
         }
 
