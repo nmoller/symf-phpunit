@@ -6,6 +6,11 @@ services:
         public: true
 
     test.AppBundle\Service\EnclosureBuilderService: '@AppBundle\Service\EnclosureBuilderService'
+
+    AppBundle\DataFixtures\ORM\:
+        resource: '%kernel.project_dir%/src/AppBundle/DataFixtures/ORM/*'
+        tags: ['doctrine.fixture.orm']
+
 framework:
     test: ~
     session:
