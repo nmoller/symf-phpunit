@@ -44,4 +44,29 @@ class DefaultControllerTest extends WebTestCase
 
         $this->assertGreaterThan(0, $crawler->filter($selector)->count());
     }
+
+    public function testItGrowsADinosaurFromSpecification()
+    {
+        $client = $this->makeClient();
+        $client->followRedirects();
+
+        $this->loadFixtures([
+            LoadBasicParkData::class,
+            LoadSecurityData::class
+        ]);
+        $crawler = $client->request('GET', '/');
+
+        $this->assertStatusCode(200, $client);
+
+        $form = $crawler->selectButton('Grow dinosaur')->form();
+        $form['enclosure']->select(3);
+        $form['specification']->setValue('large herbivore');
+
+        $client->submit($form);
+
+        $this->assertStringContainsString(
+            'Grew a large herbivore in enclosure #3',
+            $client->getResponse()->getContent()
+        );
+    }
 }
