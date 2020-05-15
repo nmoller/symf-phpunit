@@ -8,6 +8,13 @@
             <tr id="enclosure-{{ enclosure.id }}">
                 <td>Enclosure # {{ enclosure.id }}</td>
                 <td>Contains <strong>{{ enclosure.dinosaurCount }}</strong> dinosaurs</td>
+                <td>
+                    {% if enclosure.isSecurityActive %}
+                        &#128274; Security active!
+                    {% else %}
+                        <button class="button button-alarm">Sound Alarm</button>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
