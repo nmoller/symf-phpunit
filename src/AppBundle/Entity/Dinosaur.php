@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dinosaur
 {
-
-    const LARGE = 20;
+    const LARGE = 10;
+    const HUGE = 30;
 
     /**
      * @ORM\Id
@@ -26,44 +26,45 @@ class Dinosaur
     private $length = 0;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isCarnivour = false;
-
-    /**
+     * @var string
      * @ORM\Column(type="string")
      */
-    private $genus = 'Unknown';
-
-    public function __construct(string $genus = 'Unknown', bool $isCarnivour = false)
-    {
-        $this->genus = $genus;
-        $this->isCarnivour = $isCarnivour;
-    }
+    private $genus;
 
     /**
-     * @return int
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
+    private $isCarnivorous;
+
+    /**
+     * @var Enclosure
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Enclosure", inversedBy="dinosaurs")
+     */
+    private $enclosure;
+
+    public function __construct(string $genus = 'Unknown', bool $isCarnivorous = false)
+    {
+        $this->genus = $genus;
+        $this->isCarnivorous = $isCarnivorous;
+    }
+
     public function getLength(): int
     {
         return $this->length;
     }
 
-    /**
-     * @param int $length
-     */
     public function setLength(int $length)
     {
         $this->length = $length;
-        return $this;
     }
 
-    public function getSpecification()
+    public function getSpecification(): string
     {
         return sprintf(
-            'The %s %s dinosaur is %d meters long',
+            'The %s %scarnivorous dinosaur is %d meters long',
             $this->genus,
-            $this->isCarnivour? 'carnivour':'non-carnivorous',
+            $this->isCarnivorous ? '' : 'non-',
             $this->length
         );
     }
@@ -73,8 +74,13 @@ class Dinosaur
         return $this->genus;
     }
 
-    public function isCarnivorous()
+    public function isCarnivorous(): bool
     {
-        return $this->isCarnivour;
+        return $this->isCarnivorous;
+    }
+
+    public function setEnclosure(Enclosure $enclosure)
+    {
+        $this->enclosure = $enclosure;
     }
 }
